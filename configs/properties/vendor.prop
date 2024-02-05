@@ -1,2 +1,5 @@
+# Bluetooth
+bluetooth.device.default_name=Lenogo Legion Y700 (2025)
+
 # USB
 vendor.usb.product_string=Lenogo Legion Y700 (2025)
