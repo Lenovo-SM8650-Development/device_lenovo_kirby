@@ -149,8 +149,6 @@ TARGET_KERNEL_EXT_MODULES := \
 
 # Kernel modules
 GKI_SUFFIX := /6.1.170-android14-11
-SYSTEM_KERNEL_MODULES := $(strip $(shell cat $(DEVICE_PATH)/configs/modules/modules.system_dlkm))
-BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(SYSTEM_KERNEL_MODULES)
 BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/configs/modules/modules.load))
 BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE := $(DEVICE_PATH)/configs/modules/modules.blocklist
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/configs/modules/modules.load.vendor_boot))
@@ -192,7 +190,6 @@ TARGET_SYSTEM_EXT_PROP += $(DEVICE_PATH)/configs/properties/system_ext.prop
 TARGET_VENDOR_PROP += $(DEVICE_PATH)/configs/properties/vendor.prop
 
 # Recovery
-# The stock .298 recovery stays on the recovery partition (chained below).
 TARGET_NO_RECOVERY := true
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/etc/fstab.qcom
@@ -223,11 +220,9 @@ BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA2048
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 2
 
-# Qualcomm UEFI verifies every slot partition listed by the stock vbmeta,
-# so carry the on-device pvmfw hash descriptor and the stock recovery chain.
+# Qualcomm UEFI verifies pvmfw through vbmeta.
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += \
-    --include_descriptors_from_image $(DEVICE_PATH)/prebuilts/pvmfw.img \
-    --chain_partition recovery:1:$(DEVICE_PATH)/prebuilts/recovery.avbpubkey
+    --include_descriptors_from_image $(DEVICE_PATH)/prebuilts/pvmfw.img
 
 # VINTF
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \

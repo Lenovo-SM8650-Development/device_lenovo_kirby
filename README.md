@@ -24,7 +24,7 @@ m bacon
 ## Notes
 
 - Flash on top of CN .298 firmware. DTB, DTBO and pvmfw in `prebuilts/`
-  are from that firmware; recovery stays stock and is chained in vbmeta.
+  are from that firmware; pvmfw is included in vbmeta.
 - The touch module is the stock .298 binary, installed by
   `kernel/lenovo/sm8650-modules/lenovo/nvt-stock`.
 - Blobs: `./extract-files.py <dump>` against a .298 dump, then commit
