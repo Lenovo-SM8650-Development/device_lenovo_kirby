@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Inset the clock to match the ~70px inset of the battery on the right. -->
+    <dimen name="status_bar_padding_start">29dp</dimen>
+</resources>
