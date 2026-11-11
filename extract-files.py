@@ -34,9 +34,6 @@ lib_fixups: lib_fixups_user_type = {
     (
         'vendor.qti.diaghal@1.0',
     ): lib_fixup_vendor_suffix,
-    (
-        'libcamxcommonutils',
-    ): lib_fixup_remove,
 }
 
 blob_fixups: blob_fixups_user_type = {
