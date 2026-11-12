@@ -232,9 +232,11 @@ BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA2048
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 2
 
-# Qualcomm UEFI verifies pvmfw through vbmeta.
+# Qualcomm UEFI verifies pvmfw and recovery through vbmeta. Recovery is the
+# stock .298 image (TARGET_NO_RECOVERY), so chain it with its own key.
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += \
-    --include_descriptors_from_image $(DEVICE_PATH)/prebuilts/pvmfw.img
+    --include_descriptors_from_image $(DEVICE_PATH)/prebuilts/pvmfw.img \
+    --chain_partition recovery:1:$(DEVICE_PATH)/prebuilts/recovery.avbpubkey
 
 # VINTF
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
