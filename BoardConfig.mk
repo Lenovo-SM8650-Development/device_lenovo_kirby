@@ -148,6 +148,10 @@ TARGET_KERNEL_EXT_MODULES := \
     lenovo/nvt-stock
 
 # Kernel modules
+# Select GKI modules explicitly so kernel.mk installs and signs them.
+BOARD_USES_SYSTEM_DLKMIMAGE := true
+SYSTEM_KERNEL_MODULES := $(strip $(shell cat $(DEVICE_PATH)/configs/modules/modules.system_dlkm))
+BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(SYSTEM_KERNEL_MODULES)
 GKI_SUFFIX := /6.1.170-android14-11
 BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/configs/modules/modules.load))
 BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE := $(DEVICE_PATH)/configs/modules/modules.blocklist

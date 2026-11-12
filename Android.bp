@@ -30,3 +30,15 @@ install_symlink {
     installed_location: "firmware/wlan/qca_cld/kiwi_v2/WCNSS_qcom_cfg.ini",
     symlink_target: "/vendor/etc/wifi/kiwi_v2/WCNSS_qcom_cfg.ini",
 }
+
+// Match the CN .298 composer V2 ABI without upgrading its parcelable layouts.
+cc_prebuilt_library_shared {
+    name: "android.hardware.graphics.common-V4-ndk-kirby",
+    owner: "lenovo",
+    srcs: ["prebuilts/lib64/android.hardware.graphics.common-V4-ndk-kirby.so"],
+    compile_multilib: "64",
+    soc_specific: true,
+    stl: "none",
+    strip: { none: true },
+    shared_libs: ["libbinder_ndk", "android.hardware.common-V2-ndk", "libc++", "libc", "libm", "libdl"],
+}

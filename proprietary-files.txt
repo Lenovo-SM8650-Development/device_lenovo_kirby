@@ -271,7 +271,7 @@ vendor/lib64/libhdr_tm.so
 vendor/lib64/libhdr10plus.so;DISABLE_CHECKELF
 
 # Display HWC
-vendor/bin/hw/vendor.qti.hardware.display.composer-service;DISABLE_DEPS
+vendor/bin/hw/vendor.qti.hardware.display.composer-service
 vendor/bin/qdcmss
 vendor/bin/ubwcconvert
 vendor/etc/init/qdcmss.rc
@@ -2146,3 +2146,12 @@ vendor/firmware/novatek_ts_csot_mp.bin
 # Vibrator
 odm/etc/aac_richtap_l.config
 odm/etc/aac_richtap_r.config
+
+# CN .298 composer interface ABI (retain original V2/V1 providers)
+vendor/lib64/android.hardware.graphics.composer3-V2-ndk.so:vendor/lib64/android.hardware.graphics.composer3-V2-ndk-kirby.so;FIX_SONAME
+vendor/lib64/vendor.qti.hardware.display.composer3-V1-ndk.so:vendor/lib64/vendor.qti.hardware.display.composer3-V1-ndk-kirby.so;FIX_SONAME
+
+# DSP service locator and audio policy prerequisite
+vendor/bin/pd-mapper
+vendor/lib64/libjson.so
+vendor/etc/bluetooth_qti_hearing_aid_audio_policy_configuration.xml
