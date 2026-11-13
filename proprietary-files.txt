@@ -1769,6 +1769,7 @@ vendor/lib64/libarcsoft_qnnhtp.so
 vendor/lib64/libarcsoft_video_superportrait.so
 vendor/lib64/libbitmlengine.so
 vendor/lib64/libbitmlenginev2.so
+vendor/lib64/libqsegnet.so
 vendor/lib64/libBSTDSLR.so
 vendor/lib64/libBSTFilter.so
 vendor/lib64/libBSTSingleAIBokeh.so
