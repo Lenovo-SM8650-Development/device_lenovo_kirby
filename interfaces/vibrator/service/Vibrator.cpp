@@ -38,6 +38,7 @@
 #include <string.h>
 #include <sys/ioctl.h>
 #include <thread>
+#include <utility>
 
 #include "include/Vibrator.h"
 #ifdef USE_EFFECT_STREAM
@@ -345,6 +346,7 @@ LedVibratorDevice::LedVibratorDevice() {
         return;
     }
 
+    close(fd);
     snprintf(devicename, sizeof(devicename), "%s/%s", LED_DEVICE_R, "activate");
     fd = TEMP_FAILURE_RETRY(open(devicename, O_RDWR));
     if (fd < 0) {
@@ -352,6 +354,7 @@ LedVibratorDevice::LedVibratorDevice() {
         return;
     }
 
+    close(fd);
     mDetected = true;
 }
 
@@ -371,6 +374,7 @@ bool LedVibratorDevice::check_node() {
     fd_r = TEMP_FAILURE_RETRY(open(devicename, O_RDWR));
     if (fd_r < 0) {
         ALOGE("open %s failed, errno = %d", devicename, errno);
+        close(fd_l);
         return false;
     }
 
@@ -412,73 +416,54 @@ int LedVibratorDevice::write_value(const char *file, const char *value) {
 }
 
 int LedVibratorDevice::on(int32_t timeoutMs) {
-    char file[PATH_MAX];
+    if (timeoutMs <= 0)
+        return -EINVAL;
+
+    // Kirby's stock RAM firmware contains four waveforms. Loop waveform 4
+    // for the requested duration; the kernel timer stops both motors.
     char value[32];
-    int ret;
-
-    snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_L, "activate_mode");
-    ret = write_value(file, "1");
-    snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_R, "activate_mode");
-    ret = write_value(file, "1");
-    
-	if (timeoutMs > 0 && timeoutMs < 20) {
-		snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_L, "index");
-		ret = write_value(file, "1");
-		snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_R, "index");
-		ret = write_value(file, "1");
-	} else if(timeoutMs >= 20 && timeoutMs <= 30) {
-		snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_L, "index");
-		ret = write_value(file, "6");
-		snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_R, "index");
-		ret = write_value(file, "6");
-	} else if(timeoutMs > 30 && timeoutMs <= 60) {
-		snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_L, "index");
-		ret = write_value(file, "4");
-		snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_R, "index");
-		ret = write_value(file, "4");
-    } else {
-		snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_L, "activate_mode");
-		ret = write_value(file, "5");
-		snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_R, "activate_mode");
-		ret = write_value(file, "5");
-		snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_L, "index");
-		ret = write_value(file, "10");
-		snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_R, "index");
-		ret = write_value(file, "10");
-		if (ret < 0)
-		   goto error;
+    snprintf(value, sizeof(value), "%d", timeoutMs);
+    for (const char* device : {LED_DEVICE_L, LED_DEVICE_R}) {
+        char file[PATH_MAX];
+        for (const auto& setting : {
+                 std::make_pair("activate_mode", "5"),
+                 std::make_pair("index", "4"),
+                 std::make_pair("duration", static_cast<const char*>(value))}) {
+            snprintf(file, sizeof(file), "%s/%s", device, setting.first);
+            int ret = write_value(file, setting.second);
+            if (ret < 0)
+                return ret;
+        }
     }
-
-    snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_L, "duration");
-    snprintf(value, sizeof(value), "%u\n", timeoutMs);
-    ret = write_value(file, value);
-    snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_R, "duration");
-    snprintf(value, sizeof(value), "%u\n", timeoutMs);
-    ret = write_value(file, value);
-
-    snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_L, "activate");
-    ret = write_value(file, "1");
-    snprintf(file, sizeof(file), "%s/%s", LED_DEVICE_R, "activate");
-    ret = write_value(file, "1");
-    if (ret < 0)
-       goto error;
-
+    for (const char* device : {LED_DEVICE_L, LED_DEVICE_R}) {
+        char file[PATH_MAX];
+        snprintf(file, sizeof(file), "%s/activate", device);
+        int ret = write_value(file, "1");
+        if (ret < 0) {
+            off();
+            return ret;
+        }
+    }
     return 0;
-
-error:
-    ALOGE("Failed to turn on vibrator ret: %d\n", ret);
-    return ret;
 }
 
-int LedVibratorDevice::off()
-{
-    return 0;
+int LedVibratorDevice::off() {
+    int firstError = 0;
+    for (const char* device : {LED_DEVICE_L, LED_DEVICE_R}) {
+        char file[PATH_MAX];
+        snprintf(file, sizeof(file), "%s/activate", device);
+        int ret = write_value(file, "0");
+        if (ret < 0 && firstError == 0)
+            firstError = ret;
+    }
+    return firstError;
 }
 
 ndk::ScopedAStatus Vibrator::getCapabilities(int32_t* _aidl_return) {
     *_aidl_return = IVibrator::CAP_ON_CALLBACK;
 
     if (ledVib.mDetected) {
+        *_aidl_return |= IVibrator::CAP_PERFORM_CALLBACK;
         ALOGD("QTI Vibrator reporting capabilities: %d", *_aidl_return);
         return ndk::ScopedAStatus::ok();
     }
@@ -539,8 +524,23 @@ ndk::ScopedAStatus Vibrator::perform(Effect effect, EffectStrength es, const std
     long playLengthMs;
     int ret;
 
-    if (ledVib.mDetected)
-        return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_UNSUPPORTED_OPERATION));
+    if (ledVib.mDetected) {
+        if (es != EffectStrength::LIGHT && es != EffectStrength::MEDIUM &&
+                es != EffectStrength::STRONG)
+            return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_UNSUPPORTED_OPERATION));
+        int duration;
+        switch (effect) {
+            case Effect::TICK: duration = 8; break;
+            case Effect::CLICK: duration = 12; break;
+            case Effect::HEAVY_CLICK: duration = 20; break;
+            default:
+                return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_UNSUPPORTED_OPERATION));
+        }
+        auto status = on(duration, callback);
+        if (status.isOk())
+            *_aidl_return = duration;
+        return status;
+    }
 
     ALOGD("Vibrator perform effect %d", effect);
 
@@ -569,8 +569,10 @@ ndk::ScopedAStatus Vibrator::perform(Effect effect, EffectStrength es, const std
 }
 
 ndk::ScopedAStatus Vibrator::getSupportedEffects(std::vector<Effect>* _aidl_return) {
-    if (ledVib.mDetected)
+    if (ledVib.mDetected) {
+        *_aidl_return = {Effect::CLICK, Effect::TICK, Effect::HEAVY_CLICK};
         return ndk::ScopedAStatus::ok();
+    }
 
     *_aidl_return = {Effect::CLICK, Effect::DOUBLE_CLICK, Effect::TICK, Effect::THUD,
                      Effect::POP, Effect::HEAVY_CLICK};
