@@ -59,6 +59,11 @@ blob_fixups: blob_fixups_user_type = {
         'vendor/lib64/libvideooptfeature.so',
     ): blob_fixup()
         .replace_needed('libtinyxml2.so', 'libtinyxml2-v34.so'),
+    # Stock declares the Dolby Codec2 store, but kirby doesn't ship dolbycodec2.
+    # A declared-but-missing HIDL service makes the codec list generator wait
+    # forever, which stalls StorageManagerService and leaves storage unmounted.
+    'vendor/etc/vintf/manifest/c2_manifest_vendor.xml': blob_fixup()
+        .regex_replace(r'.*<fqname>@1\.0::IComponentStore/dolby</fqname>\n', ''),
     'vendor/lib64/libqcodec2_core.so': blob_fixup()
         .add_needed('libcodec2_shim.so'),
     (
