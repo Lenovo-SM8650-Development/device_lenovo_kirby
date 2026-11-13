@@ -256,6 +256,16 @@ vendor/bin/ssgqmigd
 vendor/bin/ssgqmigd64
 vendor/etc/ssg/tz_whitelist.json
 
+# TZ peripheral service
+vendor/bin/ssgtzd
+vendor/etc/init/ssgtzd.rc
+vendor/lib64/libconfigdb.so
+vendor/lib64/libdsi_netctrl.so
+vendor/lib64/libnicm.so
+vendor/lib64/libnicm_dsi.so
+vendor/lib64/libnicm_utils.so
+vendor/lib64/libxml.so
+
 # Diag
 system_ext/lib64/vendor.qti.diaghal@1.0.so
 vendor/bin/diag-router
