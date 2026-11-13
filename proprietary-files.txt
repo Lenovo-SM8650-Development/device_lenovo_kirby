@@ -1878,6 +1878,7 @@ vendor/firmware/CAMERA_ICP.mdt
 vendor/etc/displayconfig/display_id_4630947039571902851.xml
 
 # Haptics
+vendor/firmware/haptic_ram.bin
 vendor/firmware/100_Haptic_Right_RTP.bin
 vendor/firmware/101_Haptic_Right_RTP.bin
 vendor/firmware/102_Haptic_Right_RTP.bin
