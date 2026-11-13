@@ -10,29 +10,6 @@ soong_namespace {
     ],
 }
 
-// The stock Kirby calibration uses sku2 filenames, while the kernel exposes
-// pineapple-qrd-snd-card to AGM and PAL.
-install_symlink {
-    name: "kirby_acdb_qrd_symlink",
-    vendor: true,
-    installed_location: "etc/acdbdata/pineapple_qrd",
-    symlink_target: "pineapple_qrd_sku2",
-}
-
-install_symlink {
-    name: "kirby_mixer_qrd_symlink",
-    vendor: true,
-    installed_location: "etc/audio/sku_pineapple/mixer_paths_pineapple_qrd.xml",
-    symlink_target: "mixer_paths_pineapple_qrd_sku2.xml",
-}
-
-install_symlink {
-    name: "kirby_resourcemanager_qrd_symlink",
-    vendor: true,
-    installed_location: "etc/audio/sku_pineapple/resourcemanager_pineapple_qrd.xml",
-    symlink_target: "resourcemanager_pineapple_qrd_sku2.xml",
-}
-
 install_symlink {
     name: "firmware_wlanmdsp.otaupdate_symlink",
     vendor: true,

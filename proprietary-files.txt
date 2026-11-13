@@ -991,6 +991,8 @@ vendor/lib64/vendor.qti.hardware.wifidisplaysessionl@1.0-halimpl.so
 # Kirby-specific
 
 # ACDB
+vendor/etc/acdbdata/pineapple_qrd/QRD_acdb_cal.acdb
+vendor/etc/acdbdata/pineapple_qrd/QRD_workspaceFileXml.qwsp
 vendor/etc/acdbdata/pineapple_qrd_sku2/QRD_pineapple_sku2_acdb_cal.acdb
 vendor/etc/acdbdata/pineapple_qrd_sku2/QRD_pineapple_sku2_workspaceFileXml.qwsp
 
@@ -1157,7 +1159,9 @@ vendor/lib64/rfs/dsp/libvpt_action_recognition.so
 vendor/lib64/rfs/dsp/libworker_pool.so
 
 # Audio
+vendor/etc/audio/sku_pineapple/mixer_paths_pineapple_qrd.xml
 vendor/etc/audio/sku_pineapple/mixer_paths_pineapple_qrd_sku2.xml
+vendor/etc/audio/sku_pineapple/resourcemanager_pineapple_qrd.xml
 vendor/etc/audio/sku_pineapple/resourcemanager_pineapple_qrd_sku2.xml
 
 # Audio Firmware

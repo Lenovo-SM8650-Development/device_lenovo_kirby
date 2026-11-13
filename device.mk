@@ -69,9 +69,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     audioadsprpcd \
-    kirby_acdb_qrd_symlink \
-    kirby_mixer_qrd_symlink \
-    kirby_resourcemanager_qrd_symlink \
     libagm_compress_plugin \
     libagm_mixer_plugin \
     libagm_pcm_plugin \
