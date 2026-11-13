@@ -1,0 +1,2 @@
+# Hand the double tap to wake switch to the power HAL.
+allow vendor_init proc_touchpanel:file { getattr setattr };

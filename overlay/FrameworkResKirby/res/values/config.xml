@@ -2,4 +2,7 @@
 <resources>
     <!-- Required for the tablet taskbar and edge Back gesture handler. -->
     <bool name="config_showNavigationBar">true</bool>
+
+    <!-- Double tap to wake, driven through the power HAL into /proc/gesture_control. -->
+    <bool name="config_supportDoubleTapWake">true</bool>
 </resources>

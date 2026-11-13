@@ -1,0 +1,2 @@
+# Novatek touch double-tap wake switch
+type proc_touchpanel, fs_type, proc_type;

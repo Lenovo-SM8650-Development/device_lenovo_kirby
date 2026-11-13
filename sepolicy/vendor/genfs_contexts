@@ -1,0 +1,2 @@
+# Novatek touch double-tap wake switch
+genfscon proc /gesture_control u:object_r:proc_touchpanel:s0

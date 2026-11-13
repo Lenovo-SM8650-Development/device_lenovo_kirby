@@ -217,6 +217,9 @@ BOOT_OS_VERSION := 14
 BOOT_SECURITY_PATCH := 2026-04-05
 VENDOR_SECURITY_PATCH := 2026-04-05
 
+# Power
+$(call soong_config_set,qtipower,tap_to_wake_node,/proc/gesture_control)
+
 # Sepolicy
 include device/qcom/sepolicy_vndr/SEPolicy.mk
 BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor

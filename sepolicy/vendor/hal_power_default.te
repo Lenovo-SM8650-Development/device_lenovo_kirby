@@ -1,0 +1,2 @@
+# Double tap to wake
+allow hal_power_default proc_touchpanel:file rw_file_perms;
