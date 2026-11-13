@@ -308,4 +308,5 @@ PRODUCT_CHARACTERISTICS := tablet
 
 # Overlays
 PRODUCT_PACKAGES += \
+    FrameworkResKirby \
     SystemUIResKirby
