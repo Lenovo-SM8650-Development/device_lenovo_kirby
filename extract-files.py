@@ -64,6 +64,14 @@ blob_fixups: blob_fixups_user_type = {
     # forever, which stalls StorageManagerService and leaves storage unmounted.
     'vendor/etc/vintf/manifest/c2_manifest_vendor.xml': blob_fixup()
         .regex_replace(r'.*<fqname>@1\.0::IComponentStore/dolby</fqname>\n', ''),
+    # Keep the stock Dolby audio codec declarations in the XML read by Codec2.
+    (
+        'vendor/etc/media_codecs.xml',
+        'vendor/etc/media_codecs_pineapple.xml',
+    ): blob_fixup()
+        .regex_replace(
+            r'(?s)\A(?!.*media_codecs_dolby_audio\.xml)(.*?<Include href="media_codecs_c2_audio\.xml" />)',
+            r'\1\n    <Include href="media_codecs_dolby_audio.xml" />'),
     'vendor/lib64/libqcodec2_core.so': blob_fixup()
         .add_needed('libcodec2_shim.so'),
     (
