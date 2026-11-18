@@ -1,0 +1,26 @@
+type hal_dolby_default, domain;
+type hal_dolby_default_exec, exec_type, vendor_file_type, file_type;
+type hal_dolby_hwservice, hwservice_manager_type;
+type dolby_vendor_data_file, file_type, data_file_type;
+
+init_daemon_domain(hal_dolby_default)
+hwbinder_use(hal_dolby_default)
+add_hwservice(hal_dolby_default, hal_dolby_hwservice)
+get_prop(hal_dolby_default, hwservicemanager_prop)
+allow hal_dolby_default vendor_configs_file:dir r_dir_perms;
+allow hal_dolby_default vendor_configs_file:file r_file_perms;
+allow hal_dolby_default dolby_vendor_data_file:dir create_dir_perms;
+allow hal_dolby_default dolby_vendor_data_file:file create_file_perms;
+allow hal_dolby_default vendor_data_file:dir search;
+allow hal_dolby_default self:unix_dgram_socket create_socket_perms;
+allow dolby_app hal_dolby_hwservice:hwservice_manager find;
+binder_call(dolby_app, hal_dolby_default)
+binder_call(hal_dolby_default, dolby_app)
+allow hal_audio_default hal_dolby_hwservice:hwservice_manager find;
+binder_call(hal_audio_default, hal_dolby_default)
+binder_call(hal_dolby_default, hal_audio_default)
+
+# Dolby decoders query DMS configuration from the vendor codec domain.
+allow mediacodec hal_dolby_hwservice:hwservice_manager find;
+binder_call(mediacodec, hal_dolby_default)
+binder_call(hal_dolby_default, mediacodec)

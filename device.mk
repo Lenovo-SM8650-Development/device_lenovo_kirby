@@ -6,6 +6,7 @@
 
 # Call the proprietary setup.
 $(call inherit-product, vendor/lenovo/kirby/kirby-vendor.mk)
+$(call inherit-product, vendor/lenovo/kirby/dolby/dolby.mk)
 # Enable virtual AB with vendor ramdisk
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/vabc_features.mk)
 

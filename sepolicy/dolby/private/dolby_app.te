@@ -1,0 +1,8 @@
+typeattribute dolby_app coredomain;
+app_domain(dolby_app)
+# Standard Android permissions for this platform-signed application.
+platform_app_domain(dolby_app)
+hwbinder_use(dolby_app)
+binder_call(dolby_app, audioserver)
+allow dolby_app audio_service:service_manager find;
+allow dolby_app mediaextractor_service:service_manager find;

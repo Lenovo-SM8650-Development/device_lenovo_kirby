@@ -1,0 +1,6 @@
+;; dolby_app is new in the current system_ext policy and has no 202504 equivalent.
+(type new_objects)
+(typeattribute new_objects)
+(typeattributeset new_objects
+  ( new_objects
+    dolby_app))
