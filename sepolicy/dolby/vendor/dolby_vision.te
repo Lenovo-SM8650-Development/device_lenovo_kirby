@@ -1,0 +1,19 @@
+# Kirby's stock Dolby Vision control service uses stable AIDL.
+type hal_dolby_vision_default, domain;
+type hal_dolby_vision_default_exec, exec_type, vendor_file_type, file_type;
+type hal_dolby_vision_service, hal_service_type, service_manager_type;
+
+init_daemon_domain(hal_dolby_vision_default)
+binder_use(hal_dolby_vision_default)
+add_service(hal_dolby_vision_default, hal_dolby_vision_service)
+
+allow mediacodec hal_dolby_vision_service:service_manager find;
+binder_call(mediacodec, hal_dolby_vision_default)
+binder_call(hal_dolby_vision_default, mediacodec)
+allow hal_dolby_vision_default fwk_sensor_service:service_manager find;
+binder_call(hal_dolby_vision_default, system_server)
+
+vendor_public_prop(vendor_dolby_vision_prop)
+set_prop(vendor_init, vendor_dolby_vision_prop)
+get_prop(surfaceflinger, vendor_dolby_vision_prop)
+get_prop(hal_dolby_vision_default, vendor_dolby_vision_prop)

@@ -3,3 +3,5 @@
 /data/vendor/dolby(/.*)? u:object_r:dolby_vendor_data_file:s0
 
 /vendor/bin/hw/vendor\.dolby\.media\.c2-default-service-dax u:object_r:mediacodec_exec:s0
+/vendor/bin/hw/dvs-aidl-service u:object_r:hal_dolby_vision_default_exec:s0
+/vendor/bin/hw/vendor\.dolby\.media\.c2@1\.0-service-vision u:object_r:mediacodec_exec:s0
